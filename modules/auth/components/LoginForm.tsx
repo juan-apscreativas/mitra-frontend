@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { Mail, Lock, Eye, EyeOff, LogIn } from 'lucide-react'
+import { routes } from '@/config/routes'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -39,7 +40,7 @@ export function LoginForm() {
   async function onSubmit(values: LoginFormValues) {
     try {
       await login.mutateAsync(values)
-      router.push('/users')
+      router.push(routes.afterLogin)
     } catch (error) {
       mapApiErrors(error, form.setError)
     }

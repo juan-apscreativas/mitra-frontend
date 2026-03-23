@@ -3,6 +3,7 @@
 import { useUser } from '@/lib/auth'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import { routes } from '@/config/routes'
 
 export default function LoginLayout({ children }: { children: React.ReactNode }) {
   const { data: user, isLoading } = useUser()
@@ -10,7 +11,7 @@ export default function LoginLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     if (user && !isLoading) {
-      router.replace('/users')
+      router.replace(routes.afterLogin)
     }
   }, [user, isLoading, router])
 
