@@ -121,10 +121,7 @@ Run after each task (task mode) and before finishing (final mode):
 
 ## Project-Specific Skills
 
-These two skills are NOT replaced by Superpowers — use them when applicable:
-
-- **`skeleton:previewing`** — Generate an HTML prototype for visual approval before implementing in React. Use for new pages or significant layout changes.
-- **`design-system-extractor`** — Analyze `/design` folder to generate `DESIGN_SYSTEM.md`. Use when the project has design mockups but no documented design system yet.
+See root `CLAUDE.md` → "Project-Specific Skills" for `skeleton:previewing` and `design-system-extractor`.
 
 ## Commands
 
@@ -141,18 +138,15 @@ npm run build-storybook  # Static Storybook build
 
 ## Module Generator
 
-**Always use the generator as the first step when creating a new frontend module.**
-
 ```bash
 npx tsx scripts/make-module.ts --name={module} --entity={Entity}
-# Example: npx tsx scripts/make-module.ts --name=inventory --entity=Item
 ```
 
-Generates 12 files (see ARCHITECTURE.md). Then customize TODOs with real fields.
+Generates 12 files (see `ARCHITECTURE.md` → "Base Module Structure"). Always use this as the first step for new modules. Customize TODOs with real fields after generation.
 
 ## Progressive Disclosure
 
-Base module: 12 files (see ARCHITECTURE.md). Start minimal. Add complexity ONLY when Extension Point triggers are met. Never split hooks into separate files or add Zustand stores unless explicitly needed.
+Base module = 12 files. Add complexity ONLY when Extension Point triggers are met (see `ARCHITECTURE.md` → "Extension Points").
 
 ## UI Primitives: Base UI (NOT Radix)
 
@@ -171,44 +165,15 @@ When using `<Button>` with a non-`<button>` element (like `<Link>`), you MUST pa
 
 ## Rules
 
-- **ARCHITECTURE.md is the source of truth.** ALWAYS read `ARCHITECTURE.md` before creating or modifying any file. Every component, hook, API function, type, and test MUST follow the patterns defined there. No exceptions.
+**All patterns, conventions, and naming rules are defined in `ARCHITECTURE.md`.** Read it before creating or modifying any file. The rules below are operational supplements.
+
+- **ARCHITECTURE.md is the source of truth.** No exceptions.
 - **Files:** kebab-case. **Components:** PascalCase. **Hooks:** camelCase with `use` prefix.
-- **Imports:** `@/` alias. Enforced order: builtin → external → internal → parent → sibling.
 - **TypeScript strict.** Never `any`. IDs = `string`. Timestamps = `string`.
-- **Styling:** Tailwind only + `cn()`. No CSS modules, no styled-components.
+- **Forms:** Zod schema → RHF `useForm` → shadcn `FormField` → `mutateAsync` + `mapApiErrors`. One form for create AND edit.
+- **Labels:** `lib/labels.ts`. Never hardcode user-facing text.
 - **No barrel exports.** No `index.ts` re-exports.
 - **Modules don't cross-import** (except via `types.ts`).
-- **`app/` has no business logic** — only routing and layouts.
-- **State:** Server → TanStack Query. Global UI → Zustand. Local UI → useState.
-- **Data fetching:** Always `api.*` from `lib/http-client.ts`. Never direct `fetch()`.
-- **Forms:** Zod schema → RHF `useForm` → shadcn `FormField` → `mutateAsync` + `mapApiErrors`. One `{Entity}Form.tsx` for create AND edit (mode prop + defaultValues).
-- **Testing:** Vitest + Testing Library + MSW. Never `vi.mock`. ONE test file per module (base case).
-- **Stories:** Every component in `modules/` and `components/` has a `.stories.tsx`. At minimum: Default story.
-- **Labels:** `lib/labels.ts`. Never hardcode user-facing text.
-- **Env:** `import { env } from "@/config/env"`. Never direct `process.env`.
-- **Permissions:** `can("mod.action")`, `canAny([...])`, `<Authorized permission="...">`.
-- **URL state:** Filters and pagination sync with URL search params via `useSearchParams()`.
-- **UI states:** Every data-dependent view handles loading (`LoadingState`), empty (`EmptyState`), and error (`ErrorState`).
-
-## Naming
-
-| Type | Pattern | Example |
-|------|---------|---------|
-| API functions | `get{Entity}s`, `create{Entity}` | `getProducts`, `createProduct` |
-| Query keys | `{entity}Keys.all`, `.list()`, `.detail(id)` | `productKeys.list(params)` |
-| Hooks | `use{Entity}s`, `use{Action}{Entity}` | `useProducts`, `useCreateProduct` |
-| Components | PascalCase | `ProductList`, `ProductForm` |
-| Test files | `{mod}.test.ts` | `products.test.ts` |
-| Story files | `{Component}.stories.tsx` | `ProductForm.stories.tsx` |
-| Schemas | `{entity}Schema` | `productSchema` |
-| Form values | `{Entity}FormValues` | `ProductFormValues` |
-
-## Auth
-
-- `useUser()`: data = authenticated, error = redirect to login.
-- `AuthGuard` in dashboard layout.
-- Login: `getCsrfCookie()` before `POST /login`.
-- Logout: `queryClient.clear()`.
 
 ## API Types
 
