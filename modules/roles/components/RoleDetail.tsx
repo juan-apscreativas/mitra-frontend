@@ -5,13 +5,13 @@ import { toast } from 'sonner'
 import { useRole, useSyncRolePermissions, usePermissionsList } from '@/modules/roles/hooks'
 import { useDataScopeRules, useRoleDataScopes, useSyncRoleDataScopes } from '@/modules/data-scopes/hooks'
 import { PermissionMatrix } from '@/modules/roles/components/PermissionMatrix'
+import { RoleFormDrawer } from '@/modules/roles/components/RoleFormDrawer'
 import { LoadingState, ErrorState, NotFoundState } from '@/components/ui/states'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Authorized } from '@/components/ui/authorized'
 import { labels } from '@/lib/labels'
-import Link from 'next/link'
 import type { Permission } from '@/modules/roles/types'
 
 interface RoleDetailProps {
@@ -25,6 +25,7 @@ export function RoleDetail({ id }: RoleDetailProps) {
   const { data: allScopeRulesData } = useDataScopeRules({ per_page: 100 })
   const { data: assignedScopeData } = useRoleDataScopes(id)
   const syncDataScopes = useSyncRoleDataScopes()
+  const [editOpen, setEditOpen] = useState(false)
 
   const role = data?.data
   const [selectedPermissionIds, setSelectedPermissionIds] = useState<number[]>([])
@@ -82,7 +83,7 @@ export function RoleDetail({ id }: RoleDetailProps) {
         </div>
         <Authorized permission="roles.update">
           {!role.is_system && (
-            <Button variant="outline" nativeButton={false} render={<Link href={`/roles/${id}/edit`} />}>
+            <Button variant="outline" onClick={() => setEditOpen(true)}>
               {labels.common.edit}
             </Button>
           )}
@@ -169,6 +170,7 @@ export function RoleDetail({ id }: RoleDetailProps) {
           )}
         </div>
       </Authorized>
+      <RoleFormDrawer open={editOpen} onOpenChange={setEditOpen} mode="edit" roleId={id} />
     </div>
   )
 }

@@ -70,4 +70,6 @@ export interface RoleFormProps {
   defaultValues?: Partial<CreateRoleInput>
   roleId?: string
   mode: 'create' | 'edit'
+  formId?: string
+  onSuccess?: () => void
 }

@@ -40,9 +40,10 @@ import type { Role } from '../types'
 
 interface RoleActionsProps {
   role: Role
+  onEdit?: () => void
 }
 
-export function RoleActions({ role }: RoleActionsProps) {
+export function RoleActions({ role, onEdit }: RoleActionsProps) {
   const { can } = usePermissions()
   const router = useRouter()
   const [cloneOpen, setCloneOpen] = useState(false)
@@ -89,7 +90,7 @@ export function RoleActions({ role }: RoleActionsProps) {
             </DropdownMenuItem>
           )}
           {showEdit && (
-            <DropdownMenuItem render={<Link href={`/roles/${role.id}/edit`} />}>
+            <DropdownMenuItem onClick={onEdit}>
               {labels.common.edit}
             </DropdownMenuItem>
           )}
