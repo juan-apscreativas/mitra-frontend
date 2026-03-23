@@ -69,25 +69,28 @@ export function PositionForm({ defaultValues, positionId, mode, formId = 'positi
   const { data: documentsData } = useDocuments({ per_page: 100, 'filter[status]': 'active' } as DocumentListParams)
   const allDocuments = documentsData?.data ?? []
 
-  function isDocumentSelected(documentId: string): boolean {
-    return fields.some((f) => f.document_id === documentId)
+  function isDocumentSelected(documentId: string | number): boolean {
+    const id = String(documentId)
+    return fields.some((f) => f.document_id === id)
   }
 
-  function toggleDocument(documentId: string, isRequired: boolean) {
+  function toggleDocument(documentId: string | number, isRequired: boolean) {
+    const id = String(documentId)
     const current = form.getValues('documents') ?? []
-    const exists = current.find((d) => d.document_id === documentId)
+    const exists = current.find((d) => d.document_id === id)
     if (exists) {
-      replace(current.filter((d) => d.document_id !== documentId))
+      replace(current.filter((d) => d.document_id !== id))
     } else {
-      replace([...current, { document_id: documentId, is_required: isRequired }])
+      replace([...current, { document_id: id, is_required: isRequired }])
     }
   }
 
-  function setDocumentRequired(documentId: string, isRequired: boolean) {
+  function setDocumentRequired(documentId: string | number, isRequired: boolean) {
+    const id = String(documentId)
     const current = form.getValues('documents') ?? []
     replace(
       current.map((d) =>
-        d.document_id === documentId ? { ...d, is_required: isRequired } : d
+        d.document_id === id ? { ...d, is_required: isRequired } : d
       )
     )
   }
