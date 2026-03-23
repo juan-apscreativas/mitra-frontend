@@ -173,13 +173,25 @@ Every list/table MUST use server-side filtering, sorting, and pagination. The cl
 - **Select filter options:** Fetched in the `app/` page component and passed as props to avoid cross-module imports in `modules/`.
 - **Backend contract:** Spatie QueryBuilder expects `filter[key]=value` and `sort=key`. Use `AllowedFilter::partial()` for text, `AllowedFilter::exact()` for enums/IDs, `AllowedFilter::callback()` for relationships.
 
+## Form Drawers
+
+All CRUD forms render inside `FormDrawer` — no standalone create/edit page routes.
+
+- **Pattern:** Each module has `{Entity}FormDrawer.tsx` (wrapper) + `{Entity}Form.tsx` (fields only). Drawer wrapper handles open/close, edit-mode data fetching, and renders `FormDrawer` + `FormDrawerContent` + header.
+- **Form provider scope:** `<Form>` MUST wrap both `<FormDrawerBody>` and `<FormDrawerSubmitFooter>` — `useFormContext()` in footer needs the provider.
+- **Edit via callback, not links:** `ActionsDropdown` uses `onEdit` callback (not `editHref`). `DataTable` `meta` prop passes callbacks to column cell renderers.
+- **Conditional fetching:** Detail hooks (`useUser`, `useRole`, `useDataScopeRule`) accept `{ enabled }` option — use `enabled: isEdit && !!id && open` in drawer wrappers.
+- **Fresh state on entity change:** Use `key={`${mode}-${entityId}`}` on `FormDrawer` to remount the form.
+- **Shared password validation:** `passwordSchema` from `@/lib/validations` (min 8 + mixedCase + numbers + symbols). Import in both `users/schemas.ts` and `auth/schemas.ts`.
+- **UI states live at `@/components/ui/states`** (`LoadingState`, `EmptyState`, `ErrorState`) — NOT at `loading-state`.
+
 ## Rules
 
 **All patterns, conventions, and naming rules are defined in `ARCHITECTURE.md`.** Read it before creating or modifying any file. The rules below are operational supplements.
 
 - **ARCHITECTURE.md is the source of truth.** No exceptions.
 - **DESIGN_SYSTEM.md is the visual source of truth.** Read it before writing ANY UI code. Design must be minimalist and consistent — no generic AI aesthetics. Use semantic tokens (`text-foreground`, `bg-muted`, `bg-primary`), never hardcoded colors. Cards use `ring-1 ring-foreground/10`, not `shadow`.
-- **Consult library docs before implementing.** Never assume APIs from memory. Use Context7 or official docs for TanStack Table, TanStack Query, Base UI, and any other library.
+- **Consult library docs before implementing.** Never assume APIs from memory. Use Context7 or official docs for TanStack Table, TanStack Query, Base UI, and any other library. **This includes internal project APIs** — always read component/hook source before assuming their signatures.
 - **Files:** kebab-case. **Components:** PascalCase. **Hooks:** camelCase with `use` prefix.
 - **TypeScript strict.** Never `any`. IDs = `string`. Timestamps = `string`.
 - **Forms:** Zod schema → RHF `useForm` → shadcn `FormField` → `mutateAsync` + `mapApiErrors`. One form for create AND edit.
