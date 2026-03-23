@@ -250,6 +250,11 @@ export const labels = {
       value: 'Valor',
       scopeClass: 'Clase del scope',
     },
+    sections: {
+      rule: 'Regla',
+      configuration: 'Configuración',
+      info: 'Información',
+    },
   },
   table: {
     page: 'Página',
