@@ -8,7 +8,11 @@ import { useDataScopeRules, useScopeableEntities } from '../hooks'
 import { columns } from './columns'
 import type { DataScopeRuleListParams } from '../types'
 
-export function DataScopeRuleList() {
+interface DataScopeRuleListProps {
+  onEdit?: (id: string) => void
+}
+
+export function DataScopeRuleList({ onEdit }: DataScopeRuleListProps) {
   const {
     sorting,
     columnFilters,
@@ -58,6 +62,7 @@ export function DataScopeRuleList() {
           filterOptions={filterOptions}
           onPageChange={onPageChange}
           onPerPageChange={onPerPageChange}
+          meta={{ onEdit }}
         />
       )}
     </div>

@@ -2,7 +2,6 @@
 
 import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -23,6 +22,11 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
+import {
+  FormDrawerBody,
+  FormDrawerFooter,
+  FormDrawerClose,
+} from '@/components/ui/form-drawer'
 import { cn } from '@/lib/utils'
 import { mapApiErrors } from '@/lib/forms'
 import { labels } from '@/lib/labels'
@@ -35,8 +39,13 @@ const RULE_TYPES: DataScopeRuleType[] = ['own', 'relation', 'field_value', 'all'
 
 const OPERATORS = ['=', '!=', '<', '<=', '>', '>=', 'in', 'not_in', 'like']
 
-export function DataScopeRuleBuilder({ defaultValues, ruleId, mode }: DataScopeFormProps) {
-  const router = useRouter()
+export function DataScopeRuleBuilder({
+  defaultValues,
+  ruleId,
+  mode,
+  formId = 'data-scope-rule-form',
+  onSuccess,
+}: DataScopeFormProps) {
   const createRule = useCreateDataScopeRule()
   const updateRule = useUpdateDataScopeRule()
   const { data: entitiesData } = useScopeableEntities()
@@ -116,7 +125,7 @@ export function DataScopeRuleBuilder({ defaultValues, ruleId, mode }: DataScopeF
         })
         toast.success(labels.dataScopes.created)
       }
-      router.push('/data-scopes')
+      onSuccess?.()
     } catch (error) {
       mapApiErrors(error, form.setError)
     }
@@ -127,247 +136,247 @@ export function DataScopeRuleBuilder({ defaultValues, ruleId, mode }: DataScopeF
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-2xl">
-        {/* Step 1: Name + Description */}
-        <div className="space-y-4 rounded-lg border p-4">
-          <h3 className="font-medium">1. {labels.dataScopes.fields.name}</h3>
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{labels.dataScopes.fields.name}</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{labels.dataScopes.fields.description}</FormLabel>
-                <FormControl>
-                  <Textarea {...field} value={field.value ?? ''} rows={2} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        {/* Step 2: Entity selection */}
-        <div className="space-y-4 rounded-lg border p-4">
-          <h3 className="font-medium">2. {labels.dataScopes.fields.entity}</h3>
-          <FormField
-            control={form.control}
-            name="entity"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{labels.dataScopes.selectEntity}</FormLabel>
-                <Select
-                  value={field.value}
-                  onValueChange={handleEntityChange}
-                  disabled={mode === 'edit'}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder={labels.dataScopes.selectEntity} />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {entitiesData?.data.map((entity, index) => (
-                      <SelectItem key={`entity-${index}`} value={entity.entity}>
-                        {entity.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        {/* Step 3: Rule type selection */}
-        <div className="space-y-4 rounded-lg border p-4">
-          <h3 className="font-medium">3. {labels.dataScopes.fields.type}</h3>
-          <FormField
-            control={form.control}
-            name="type"
-            render={() => (
-              <FormItem>
-                <FormLabel>{labels.dataScopes.selectType}</FormLabel>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {RULE_TYPES.map((ruleType) => (
-                    <button
-                      key={ruleType}
-                      type="button"
-                      disabled={mode === 'edit'}
-                      onClick={() => handleTypeChange(ruleType)}
-                      className={cn(
-                        'rounded-lg border p-3 text-left transition-colors',
-                        watchedType === ruleType
-                          ? 'border-primary bg-primary/5'
-                          : 'hover:border-muted-foreground/50',
-                        mode === 'edit' && 'opacity-60 cursor-not-allowed'
-                      )}
-                    >
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-medium text-sm">
-                          {labels.dataScopes.types[ruleType]}
-                        </span>
-                        {watchedType === ruleType && (
-                          <Badge variant="default" className="text-xs">
-                            {labels.common.selected}
-                          </Badge>
-                        )}
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        {labels.dataScopes.typeDescriptions[ruleType]}
-                      </p>
-                    </button>
-                  ))}
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        {/* Step 4: Type-specific configuration */}
-        {watchedType && watchedType !== 'all' && (
+      <FormDrawerBody>
+        <form id={formId} onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          {/* Step 1: Name + Description */}
           <div className="space-y-4 rounded-lg border p-4">
-            <h3 className="font-medium">4. {labels.dataScopes.fields.configuration}</h3>
+            <h3 className="font-medium">1. {labels.dataScopes.fields.name}</h3>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{labels.dataScopes.fields.name}</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{labels.dataScopes.fields.description}</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} value={field.value ?? ''} rows={2} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
-            {watchedType === 'own' && (
-              <FormItem>
-                <FormLabel>{labels.dataScopes.configLabels.ownerColumn}</FormLabel>
-                <FormControl>
-                  <Input
-                    value={String(config.owner_column ?? 'created_by')}
-                    onChange={(e) => setConfigField('owner_column', e.target.value)}
-                    placeholder="created_by"
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-
-            {watchedType === 'relation' && (
-              <>
+          {/* Step 2: Entity selection */}
+          <div className="space-y-4 rounded-lg border p-4">
+            <h3 className="font-medium">2. {labels.dataScopes.fields.entity}</h3>
+            <FormField
+              control={form.control}
+              name="entity"
+              render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{labels.dataScopes.configLabels.pivotTable}</FormLabel>
-                  <FormControl>
-                    <Input
-                      value={String(config.pivot_table ?? '')}
-                      onChange={(e) => setConfigField('pivot_table', e.target.value)}
-                      placeholder="user_orders"
-                    />
-                  </FormControl>
-                </FormItem>
-                <FormItem>
-                  <FormLabel>{labels.dataScopes.configLabels.entityForeignKey}</FormLabel>
-                  <FormControl>
-                    <Input
-                      value={String(config.entity_foreign_key ?? '')}
-                      onChange={(e) => setConfigField('entity_foreign_key', e.target.value)}
-                      placeholder="order_id"
-                    />
-                  </FormControl>
-                </FormItem>
-                <FormItem>
-                  <FormLabel>{labels.dataScopes.configLabels.userForeignKey}</FormLabel>
-                  <FormControl>
-                    <Input
-                      value={String(config.user_foreign_key ?? 'user_id')}
-                      onChange={(e) => setConfigField('user_foreign_key', e.target.value)}
-                      placeholder="user_id"
-                    />
-                  </FormControl>
-                </FormItem>
-              </>
-            )}
-
-            {watchedType === 'field_value' && (
-              <>
-                <FormItem>
-                  <FormLabel>{labels.dataScopes.configLabels.column}</FormLabel>
-                  <FormControl>
-                    <Input
-                      value={String(config.column ?? '')}
-                      onChange={(e) => setConfigField('column', e.target.value)}
-                      placeholder="status"
-                    />
-                  </FormControl>
-                </FormItem>
-                <FormItem>
-                  <FormLabel>{labels.dataScopes.configLabels.operator}</FormLabel>
+                  <FormLabel>{labels.dataScopes.selectEntity}</FormLabel>
                   <Select
-                    value={String(config.operator ?? '=')}
-                    onValueChange={(v) => { if (v) setConfigField('operator', v) }}
+                    value={field.value}
+                    onValueChange={handleEntityChange}
+                    disabled={mode === 'edit'}
                   >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder={labels.dataScopes.selectEntity} />
+                      </SelectTrigger>
+                    </FormControl>
                     <SelectContent>
-                      {OPERATORS.map((op, index) => (
-                        <SelectItem key={`op-${index}`} value={op}>
-                          {op}
+                      {entitiesData?.data.map((entity, index) => (
+                        <SelectItem key={`entity-${index}`} value={entity.entity}>
+                          {entity.label}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+                  <FormMessage />
                 </FormItem>
+              )}
+            />
+          </div>
+
+          {/* Step 3: Rule type selection */}
+          <div className="space-y-4 rounded-lg border p-4">
+            <h3 className="font-medium">3. {labels.dataScopes.fields.type}</h3>
+            <FormField
+              control={form.control}
+              name="type"
+              render={() => (
                 <FormItem>
-                  <FormLabel>{labels.dataScopes.configLabels.value}</FormLabel>
+                  <FormLabel>{labels.dataScopes.selectType}</FormLabel>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {RULE_TYPES.map((ruleType) => (
+                      <button
+                        key={ruleType}
+                        type="button"
+                        disabled={mode === 'edit'}
+                        onClick={() => handleTypeChange(ruleType)}
+                        className={cn(
+                          'rounded-lg border p-3 text-left transition-colors',
+                          watchedType === ruleType
+                            ? 'border-primary bg-primary/5'
+                            : 'hover:border-muted-foreground/50',
+                          mode === 'edit' && 'opacity-60 cursor-not-allowed'
+                        )}
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-medium text-sm">
+                            {labels.dataScopes.types[ruleType]}
+                          </span>
+                          {watchedType === ruleType && (
+                            <Badge variant="default" className="text-xs">
+                              {labels.common.selected}
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          {labels.dataScopes.typeDescriptions[ruleType]}
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          {/* Step 4: Type-specific configuration */}
+          {watchedType && watchedType !== 'all' && (
+            <div className="space-y-4 rounded-lg border p-4">
+              <h3 className="font-medium">4. {labels.dataScopes.fields.configuration}</h3>
+
+              {watchedType === 'own' && (
+                <FormItem>
+                  <FormLabel>{labels.dataScopes.configLabels.ownerColumn}</FormLabel>
                   <FormControl>
                     <Input
-                      value={String(config.value ?? '')}
-                      onChange={(e) => setConfigField('value', e.target.value)}
-                      placeholder="active"
+                      value={String(config.owner_column ?? 'created_by')}
+                      onChange={(e) => setConfigField('owner_column', e.target.value)}
+                      placeholder="created_by"
                     />
                   </FormControl>
                 </FormItem>
-              </>
-            )}
+              )}
 
-            {watchedType === 'custom' && (
-              <FormItem>
-                <FormLabel>{labels.dataScopes.configLabels.scopeClass}</FormLabel>
-                <FormControl>
-                  <Input
-                    value={String(config.scope_class ?? '')}
-                    onChange={(e) => setConfigField('scope_class', e.target.value)}
-                    placeholder="App\\Scopes\\MyCustomScope"
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          </div>
-        )}
+              {watchedType === 'relation' && (
+                <>
+                  <FormItem>
+                    <FormLabel>{labels.dataScopes.configLabels.pivotTable}</FormLabel>
+                    <FormControl>
+                      <Input
+                        value={String(config.pivot_table ?? '')}
+                        onChange={(e) => setConfigField('pivot_table', e.target.value)}
+                        placeholder="user_orders"
+                      />
+                    </FormControl>
+                  </FormItem>
+                  <FormItem>
+                    <FormLabel>{labels.dataScopes.configLabels.entityForeignKey}</FormLabel>
+                    <FormControl>
+                      <Input
+                        value={String(config.entity_foreign_key ?? '')}
+                        onChange={(e) => setConfigField('entity_foreign_key', e.target.value)}
+                        placeholder="order_id"
+                      />
+                    </FormControl>
+                  </FormItem>
+                  <FormItem>
+                    <FormLabel>{labels.dataScopes.configLabels.userForeignKey}</FormLabel>
+                    <FormControl>
+                      <Input
+                        value={String(config.user_foreign_key ?? 'user_id')}
+                        onChange={(e) => setConfigField('user_foreign_key', e.target.value)}
+                        placeholder="user_id"
+                      />
+                    </FormControl>
+                  </FormItem>
+                </>
+              )}
 
-        {/* Step 5: Preview */}
-        {watchedEntity && watchedType && (
-          <ScopeRulePreview
-            entity={watchedEntity}
-            type={watchedType}
-            configuration={config}
-          />
-        )}
+              {watchedType === 'field_value' && (
+                <>
+                  <FormItem>
+                    <FormLabel>{labels.dataScopes.configLabels.column}</FormLabel>
+                    <FormControl>
+                      <Input
+                        value={String(config.column ?? '')}
+                        onChange={(e) => setConfigField('column', e.target.value)}
+                        placeholder="status"
+                      />
+                    </FormControl>
+                  </FormItem>
+                  <FormItem>
+                    <FormLabel>{labels.dataScopes.configLabels.operator}</FormLabel>
+                    <Select
+                      value={String(config.operator ?? '=')}
+                      onValueChange={(v) => { if (v) setConfigField('operator', v) }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {OPERATORS.map((op, index) => (
+                          <SelectItem key={`op-${index}`} value={op}>
+                            {op}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                  <FormItem>
+                    <FormLabel>{labels.dataScopes.configLabels.value}</FormLabel>
+                    <FormControl>
+                      <Input
+                        value={String(config.value ?? '')}
+                        onChange={(e) => setConfigField('value', e.target.value)}
+                        placeholder="active"
+                      />
+                    </FormControl>
+                  </FormItem>
+                </>
+              )}
 
-        {/* Step 6: Save */}
-        <div className="flex gap-2">
-          <Button type="submit" disabled={isPending}>
-            {isPending ? labels.common.loading : labels.common.save}
-          </Button>
-          <Button type="button" variant="outline" onClick={() => router.back()}>
-            {labels.common.cancel}
-          </Button>
-        </div>
-      </form>
+              {watchedType === 'custom' && (
+                <FormItem>
+                  <FormLabel>{labels.dataScopes.configLabels.scopeClass}</FormLabel>
+                  <FormControl>
+                    <Input
+                      value={String(config.scope_class ?? '')}
+                      onChange={(e) => setConfigField('scope_class', e.target.value)}
+                      placeholder="App\\Scopes\\MyCustomScope"
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            </div>
+          )}
+
+          {/* Step 5: Preview */}
+          {watchedEntity && watchedType && (
+            <ScopeRulePreview
+              entity={watchedEntity}
+              type={watchedType}
+              configuration={config}
+            />
+          )}
+        </form>
+      </FormDrawerBody>
+      <FormDrawerFooter>
+        <FormDrawerClose render={<Button variant="outline" type="button" />}>
+          {labels.common.cancel}
+        </FormDrawerClose>
+        <Button type="submit" form={formId} disabled={isPending}>
+          {isPending ? labels.common.loading : labels.common.save}
+        </Button>
+      </FormDrawerFooter>
     </Form>
   )
 }

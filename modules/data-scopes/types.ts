@@ -60,6 +60,8 @@ export interface DataScopeFormProps {
   defaultValues?: DataScopeFormDefaults
   ruleId?: string
   mode: 'create' | 'edit'
+  formId?: string
+  onSuccess?: () => void
 }
 
 export interface DataScopeRulePreviewInput {
