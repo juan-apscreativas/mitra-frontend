@@ -17,7 +17,8 @@ export interface User {
 }
 
 export interface UserListParams {
-  search?: string
+  'filter[name]'?: string
+  'filter[email]'?: string
   'filter[status]'?: string
   'filter[role]'?: string
   'filter[date_from]'?: string

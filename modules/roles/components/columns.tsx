@@ -10,6 +10,7 @@ export const columns: ColumnDef<Role>[] = [
   {
     accessorKey: 'name',
     header: labels.roles.fields.name,
+    meta: { filterType: 'text' },
     cell: ({ row }) => (
       <div className="flex items-center gap-2">
         {row.original.name}
@@ -22,6 +23,7 @@ export const columns: ColumnDef<Role>[] = [
   {
     accessorKey: 'description',
     header: labels.roles.fields.description,
+    meta: { filterType: 'text' },
     cell: ({ row }) => row.original.description ?? '—',
   },
   {
@@ -34,6 +36,7 @@ export const columns: ColumnDef<Role>[] = [
   },
   {
     id: 'actions',
+    enableSorting: false,
     cell: ({ row }) => <RoleActions role={row.original} />,
   },
 ]

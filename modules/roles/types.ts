@@ -22,9 +22,11 @@ export interface Permission {
 export type PermissionsGrouped = Record<string, Permission[]>
 
 export interface RoleListParams {
-  search?: string
+  'filter[name]'?: string
+  'filter[description]'?: string
   page?: number
   per_page?: number
+  sort?: string
 }
 
 export interface CreateRoleInput {

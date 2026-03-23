@@ -10,14 +10,18 @@ export const columns: ColumnDef<DataScopeRule>[] = [
   {
     accessorKey: 'name',
     header: labels.dataScopes.fields.name,
+    meta: { filterType: 'text' },
   },
   {
+    id: 'entity',
     accessorKey: 'entity_label',
     header: labels.dataScopes.fields.entity,
+    meta: { filterType: 'select' },
   },
   {
     accessorKey: 'type',
     header: labels.dataScopes.fields.type,
+    meta: { filterType: 'select' },
     cell: ({ row }) => (
       <Badge variant="secondary">
         {labels.dataScopes.types[row.original.type]}
@@ -27,10 +31,12 @@ export const columns: ColumnDef<DataScopeRule>[] = [
   {
     accessorKey: 'description',
     header: labels.dataScopes.fields.description,
+    meta: { filterType: 'text' },
     cell: ({ row }) => row.original.description ?? '—',
   },
   {
     id: 'actions',
+    enableSorting: false,
     cell: ({ row }) => (
       <ActionsDropdown
         editHref={`/data-scopes/${row.original.id}/edit`}

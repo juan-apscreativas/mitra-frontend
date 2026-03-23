@@ -21,9 +21,13 @@ export interface ScopePreviewResult {
 }
 
 export interface DataScopeRuleListParams {
+  'filter[name]'?: string
   'filter[entity]'?: string
+  'filter[type]'?: string
+  'filter[description]'?: string
   page?: number
   per_page?: number
+  sort?: string
 }
 
 export interface CreateDataScopeRuleInput {
