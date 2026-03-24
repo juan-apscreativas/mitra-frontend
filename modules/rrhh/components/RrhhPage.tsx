@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -44,6 +44,18 @@ export function RrhhPage() {
 
   const tabParam = searchParams.get('tab') as RrhhTab | null
   const activeTab: RrhhTab = tabParam && VALID_TABS.includes(tabParam) ? tabParam : DEFAULT_TAB
+
+  // Extract filter params from URL for stats
+  const statsFilters = useMemo(() => {
+    const filters: Record<string, string> = {}
+    searchParams.forEach((value, key) => {
+      const match = key.match(/^filter\[(.+)\]$/)
+      if (match && value) {
+        filters[match[1]] = value
+      }
+    })
+    return Object.keys(filters).length > 0 ? filters : undefined
+  }, [searchParams])
 
   const setActiveTab = useCallback((tab: RrhhTab) => {
     const params = new URLSearchParams(searchParams.toString())
@@ -93,7 +105,7 @@ export function RrhhPage() {
         <p className="text-sm text-muted-foreground">{labels.rrhh.subtitle}</p>
       </div>
 
-      <RrhhStats activeTab={activeTab} />
+      <RrhhStats activeTab={activeTab} filters={statsFilters} />
 
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="overflow-x-auto">

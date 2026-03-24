@@ -38,10 +38,11 @@ const defaultIcon = { icon: BarChart3, color: 'bg-muted text-muted-foreground' }
 
 interface RrhhStatsProps {
   activeTab: RrhhTab
+  filters?: Record<string, string>
 }
 
-export function RrhhStats({ activeTab }: RrhhStatsProps) {
-  const { data, isLoading, isError, error, refetch } = useRrhhStats(activeTab)
+export function RrhhStats({ activeTab, filters }: RrhhStatsProps) {
+  const { data, isLoading, isError, error, refetch } = useRrhhStats(activeTab, filters)
   if (isLoading) return <LoadingState />
   if (isError) return <ErrorState error={error} onRetry={refetch} />
   const metrics = data?.data?.metrics ?? []
