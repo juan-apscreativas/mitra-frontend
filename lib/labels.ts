@@ -372,8 +372,12 @@ export const labels = {
         temporaryPasswordMessage: 'La contraseña temporal del empleado es:',
         requiredSummary: (uploaded: number, total: number) => `${uploaded}/${total} requeridos`,
         optionalSummary: (uploaded: number, total: number) => `${uploaded}/${total} opcionales`,
+        manageDocs: 'Gestionar documentos',
       },
       seniorityYears: 'años',
+      sections: {
+        info: 'Información General',
+      },
     },
     statuses: {
       active: 'Activo',

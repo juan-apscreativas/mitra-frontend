@@ -10,10 +10,11 @@ import type { Employee, EmployeeDocument } from '../types'
 
 interface EmployeeDocumentsProps {
   employee: Employee
+  readOnly?: boolean
   onDocumentUploaded?: () => void
 }
 
-export function EmployeeDocuments({ employee, onDocumentUploaded }: EmployeeDocumentsProps) {
+export function EmployeeDocuments({ employee, readOnly = false, onDocumentUploaded }: EmployeeDocumentsProps) {
   const uploadDoc = useUploadDocument()
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({})
 
@@ -64,6 +65,7 @@ export function EmployeeDocuments({ employee, onDocumentUploaded }: EmployeeDocu
             key={doc.id}
             doc={doc}
             employeeId={String(employee.id)}
+            readOnly={readOnly}
             isUploading={uploadDoc.isPending}
             fileInputRef={(el) => { fileInputRefs.current[doc.id] = el }}
             onTriggerUpload={() => triggerFileInput(doc.id)}
@@ -78,13 +80,14 @@ export function EmployeeDocuments({ employee, onDocumentUploaded }: EmployeeDocu
 interface DocumentRowProps {
   doc: EmployeeDocument
   employeeId: string
+  readOnly: boolean
   isUploading: boolean
   fileInputRef: (el: HTMLInputElement | null) => void
   onTriggerUpload: () => void
   onFileSelected: (file: File) => void
 }
 
-function DocumentRow({ doc, isUploading, fileInputRef, onTriggerUpload, onFileSelected }: DocumentRowProps) {
+function DocumentRow({ doc, readOnly, isUploading, fileInputRef, onTriggerUpload, onFileSelected }: DocumentRowProps) {
   return (
     <div className="flex items-center justify-between rounded-lg border border-input p-3">
       <div className="flex items-center gap-3 min-w-0">
@@ -111,29 +114,33 @@ function DocumentRow({ doc, isUploading, fileInputRef, onTriggerUpload, onFileSe
             <ExternalLinkIcon className="size-4" />
           </Button>
         )}
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onTriggerUpload}
-          disabled={isUploading}
-        >
-          <FileUpIcon className="size-4 mr-1" />
-          {doc.is_uploaded
-            ? labels.rrhh.employees.docs.replace
-            : labels.rrhh.employees.docs.upload}
-        </Button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          className="hidden"
-          onChange={(e) => {
-            const file = e.target.files?.[0]
-            if (file) {
-              onFileSelected(file)
-              e.target.value = ''
-            }
-          }}
-        />
+        {!readOnly && (
+          <>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onTriggerUpload}
+              disabled={isUploading}
+            >
+              <FileUpIcon className="size-4 mr-1" />
+              {doc.is_uploaded
+                ? labels.rrhh.employees.docs.replace
+                : labels.rrhh.employees.docs.upload}
+            </Button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0]
+                if (file) {
+                  onFileSelected(file)
+                  e.target.value = ''
+                }
+              }}
+            />
+          </>
+        )}
       </div>
     </div>
   )
