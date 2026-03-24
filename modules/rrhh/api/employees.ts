@@ -23,7 +23,7 @@ export async function getEmployee(id: string): Promise<{ data: Employee }> {
   return httpClient.get(`/rrhh/employees/${id}`)
 }
 
-export async function createEmployee(data: CreateEmployeeInput): Promise<{ data: Employee }> {
+export async function createEmployee(data: CreateEmployeeInput): Promise<{ data: Employee; temporary_password?: string }> {
   return httpClient.post('/rrhh/employees', data)
 }
 

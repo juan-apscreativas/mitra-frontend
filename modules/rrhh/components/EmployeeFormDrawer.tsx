@@ -1,6 +1,17 @@
 'use client'
 
-// TODO: Replace with full implementation in Task 9
+import { toast } from 'sonner'
+import {
+  FormDrawer,
+  FormDrawerContent,
+  FormDrawerHeader,
+  FormDrawerTitle,
+} from '@/components/ui/form-drawer'
+import { LoadingState } from '@/components/ui/states'
+import { labels } from '@/lib/labels'
+import { useEmployee } from '../hooks/use-employees'
+import { EmployeeForm } from './EmployeeForm'
+
 interface EmployeeFormDrawerProps {
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -8,7 +19,51 @@ interface EmployeeFormDrawerProps {
   employeeId?: string
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function EmployeeFormDrawer(_props: EmployeeFormDrawerProps) {
-  return null
+export function EmployeeFormDrawer({ open, onOpenChange, mode, employeeId }: EmployeeFormDrawerProps) {
+  const isEdit = mode === 'edit'
+  const { data, isLoading } = useEmployee(employeeId ?? '', { enabled: isEdit && !!employeeId && open })
+  const employee = data?.data
+
+  const title = isEdit
+    ? `${labels.common.edit}: ${employee?.name ?? ''}`
+    : labels.rrhh.employees.create
+
+  function handleSuccess(password?: string) {
+    if (password) {
+      toast.success(
+        `${labels.rrhh.employees.docs.temporaryPasswordMessage} ${password}`,
+        { duration: 15000 }
+      )
+    }
+    onOpenChange(false)
+  }
+
+  return (
+    <FormDrawer key={`${mode}-${employeeId}`} open={open} onOpenChange={onOpenChange}>
+      <FormDrawerContent>
+        <FormDrawerHeader>
+          <FormDrawerTitle>{title}</FormDrawerTitle>
+        </FormDrawerHeader>
+        {isEdit && isLoading ? (
+          <LoadingState />
+        ) : (
+          <EmployeeForm
+            mode={mode}
+            employeeId={employeeId}
+            defaultValues={
+              isEdit && employee
+                ? {
+                    name: employee.name,
+                    position_id: String(employee.position_id),
+                    hired_at: employee.hired_at,
+                    location: employee.location ?? '',
+                  }
+                : undefined
+            }
+            onSuccess={handleSuccess}
+          />
+        )}
+      </FormDrawerContent>
+    </FormDrawer>
+  )
 }
