@@ -36,12 +36,13 @@ function buildTrees(
         ? node.employees
         : node.employees.filter((e) => e.status === employeeStatus)
 
-    nodeMap.set(node.id, {
-      id: node.id,
+    const id = String(node.id)
+    nodeMap.set(id, {
+      id,
       name: node.name,
-      areaId: node.area_id,
+      areaId: String(node.area_id),
       areaName: node.area_name,
-      reportsToId: node.reports_to_id,
+      reportsToId: node.reports_to_id ? String(node.reports_to_id) : null,
       authorizedPositions: node.authorized_positions,
       allEmployeeCount: node.employees.length,
       employees: displayEmployees,

@@ -29,7 +29,7 @@ export function OrgChart({ onViewEmployee }: OrgChartProps) {
 
   const selectedNode = useMemo(() => {
     if (!detailDrawer.positionId) return null
-    return nodes.find((n) => n.id === detailDrawer.positionId) ?? null
+    return nodes.find((n) => String(n.id) === detailDrawer.positionId) ?? null
   }, [nodes, detailDrawer.positionId])
 
   const handleNodeClick = useCallback((positionId: string) => {
