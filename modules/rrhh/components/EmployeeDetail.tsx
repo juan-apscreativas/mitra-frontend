@@ -43,7 +43,9 @@ export function EmployeeDetail({ employeeId, onEdit }: EmployeeDetailProps) {
     }
   }
 
-  const seniorityDisplay = `${employee.seniority_years.toFixed(1)} ${labels.rrhh.employees.seniorityYears}`
+  const seniorityDisplay = employee.seniority_years != null
+    ? `${employee.seniority_years.toFixed(1)} ${labels.rrhh.employees.seniorityYears}`
+    : '—'
 
   return (
     <div className="space-y-6">

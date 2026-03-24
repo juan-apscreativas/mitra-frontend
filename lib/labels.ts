@@ -337,6 +337,7 @@ export const labels = {
       blocked: 'Empleado bloqueado',
       unblocked: 'Empleado desbloqueado',
       selectPosition: 'Seleccionar puesto',
+      generatePassword: 'Generar contraseña',
       blockAction: 'Bloquear',
       unblockAction: 'Desbloquear',
       fields: {

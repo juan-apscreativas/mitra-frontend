@@ -17,8 +17,9 @@ export function EmployeeDocuments({ employee, onDocumentUploaded }: EmployeeDocu
   const uploadDoc = useUploadDocument()
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({})
 
-  const requiredDocs = employee.documents.filter((d) => d.is_required)
-  const optionalDocs = employee.documents.filter((d) => !d.is_required)
+  const docs = employee.documents ?? []
+  const requiredDocs = docs.filter((d) => d.is_required)
+  const optionalDocs = docs.filter((d) => !d.is_required)
   const requiredUploaded = requiredDocs.filter((d) => d.is_uploaded).length
   const optionalUploaded = optionalDocs.filter((d) => d.is_uploaded).length
 
@@ -33,7 +34,7 @@ export function EmployeeDocuments({ employee, onDocumentUploaded }: EmployeeDocu
     fileInputRefs.current[docId]?.click()
   }
 
-  if (employee.documents.length === 0) {
+  if (docs.length === 0) {
     return (
       <p className="text-sm text-muted-foreground">{labels.rrhh.employees.docs.noDocuments}</p>
     )
@@ -58,7 +59,7 @@ export function EmployeeDocuments({ employee, onDocumentUploaded }: EmployeeDocu
 
       {/* Document list */}
       <div className="space-y-2">
-        {employee.documents.map((doc) => (
+        {docs.map((doc) => (
           <DocumentRow
             key={doc.id}
             doc={doc}

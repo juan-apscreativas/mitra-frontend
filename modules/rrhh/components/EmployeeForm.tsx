@@ -5,7 +5,9 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
+import { Shuffle } from 'lucide-react'
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -55,6 +57,16 @@ export function EmployeeForm({ defaultValues, employeeId, mode, formId = 'employ
   const positions = positionsData?.data ?? []
 
   // Location combobox state
+  function handleGeneratePassword() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%'
+    let password = ''
+    for (let i = 0; i < 16; i++) {
+      password += chars.charAt(Math.floor(Math.random() * chars.length))
+    }
+    form.setValue('password' as never, password as never)
+    form.setValue('password_confirmation' as never, password as never)
+  }
+
   const [locationQuery, setLocationQuery] = useState('')
   const { data: locationsData } = useLocations(locationQuery)
   const locationSuggestions = locationsData?.data ?? []
@@ -80,7 +92,7 @@ export function EmployeeForm({ defaultValues, employeeId, mode, formId = 'employ
   return (
     <Form {...form}>
       <FormDrawerBody>
-        <form id={formId} onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form id={formId} onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" autoComplete="off">
           <FormField
             control={form.control}
             name="name"
@@ -114,7 +126,13 @@ export function EmployeeForm({ defaultValues, employeeId, mode, formId = 'employ
                 name={'password' as never}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{labels.rrhh.employees.fields.password}</FormLabel>
+                    <div className="flex items-center justify-between">
+                      <FormLabel>{labels.rrhh.employees.fields.password}</FormLabel>
+                      <Button type="button" variant="ghost" size="sm" onClick={handleGeneratePassword}>
+                        <Shuffle className="h-3 w-3 mr-1" />
+                        {labels.rrhh.employees.generatePassword}
+                      </Button>
+                    </div>
                     <FormControl>
                       <Input type="password" {...field} />
                     </FormControl>
@@ -184,6 +202,7 @@ export function EmployeeForm({ defaultValues, employeeId, mode, formId = 'employ
                   <div>
                     <Input
                       list="location-suggestions"
+                      autoComplete="off"
                       {...field}
                       value={field.value ?? ''}
                       onChange={(e) => {
