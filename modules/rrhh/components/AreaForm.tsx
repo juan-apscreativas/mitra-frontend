@@ -40,7 +40,6 @@ export function AreaForm({ defaultValues, areaId, mode, formId = 'area-form', on
     resolver: zodResolver(schema) as never,
     defaultValues: defaultValues ?? {
       name: '',
-      max_positions: 1,
     },
   })
 
@@ -72,19 +71,6 @@ export function AreaForm({ defaultValues, areaId, mode, formId = 'area-form', on
                 <FormLabel>{labels.rrhh.areas.fields.name}</FormLabel>
                 <FormControl>
                   <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="max_positions"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{labels.rrhh.areas.fields.maxPositions}</FormLabel>
-                <FormControl>
-                  <Input type="number" min={1} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

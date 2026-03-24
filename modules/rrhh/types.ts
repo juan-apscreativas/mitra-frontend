@@ -2,7 +2,6 @@
 export interface Area {
   id: string
   name: string
-  max_positions: number
   status: 'active' | 'inactive'
   active_positions_count: number
   used_positions: number
@@ -12,12 +11,10 @@ export interface Area {
 
 export interface CreateAreaInput {
   name: string
-  max_positions: number
 }
 
 export interface UpdateAreaInput {
   name?: string
-  max_positions?: number
   status?: 'active' | 'inactive'
 }
 

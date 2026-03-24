@@ -295,7 +295,6 @@ export const labels = {
       empty: 'No hay áreas registradas',
       fields: {
         name: 'Nombre',
-        maxPositions: 'Límite de plazas',
         status: 'Estado',
         activePositions: 'Puestos activos',
         usedPositions: 'Plazas ocupadas',

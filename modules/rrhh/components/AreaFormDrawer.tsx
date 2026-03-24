@@ -47,7 +47,6 @@ export function AreaFormDrawer({ open, onOpenChange, mode, areaId }: AreaFormDra
               isEdit && area
                 ? {
                     name: area.name,
-                    max_positions: area.max_positions,
                     status: area.status,
                   }
                 : undefined

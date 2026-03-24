@@ -3,12 +3,10 @@ import { z } from 'zod'
 // Area
 export const createAreaSchema = z.object({
   name: z.string().min(1, 'El nombre es requerido').max(255),
-  max_positions: z.coerce.number().min(1, 'Debe ser al menos 1'),
 })
 
 export const updateAreaSchema = z.object({
   name: z.string().min(1).max(255),
-  max_positions: z.coerce.number().min(1),
   status: z.enum(['active', 'inactive']).optional(),
 })
 

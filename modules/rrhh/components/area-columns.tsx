@@ -13,10 +13,6 @@ export const areaColumns: ColumnDef<Area>[] = [
     meta: { filterType: 'text' },
   },
   {
-    accessorKey: 'max_positions',
-    header: labels.rrhh.areas.fields.maxPositions,
-  },
-  {
     accessorKey: 'active_positions_count',
     header: labels.rrhh.areas.fields.activePositions,
     enableSorting: false,
@@ -25,11 +21,7 @@ export const areaColumns: ColumnDef<Area>[] = [
     id: 'used_positions',
     header: labels.rrhh.areas.fields.usedPositions,
     enableSorting: false,
-    cell: ({ row }) => {
-      const used = row.original.used_positions
-      const max = row.original.max_positions
-      return `${used} / ${max}`
-    },
+    cell: ({ row }) => row.original.used_positions,
   },
   {
     accessorKey: 'status',
