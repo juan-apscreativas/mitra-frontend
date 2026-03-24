@@ -54,6 +54,42 @@ interface DataTableProps<TData, TValue> {
 const ALL_VALUE = '__all__'
 const PER_PAGE_OPTIONS = [10, 15, 25, 50]
 
+function SelectFilter({
+  value,
+  options,
+  onChange,
+}: {
+  value: string
+  options: { label: string; value: string }[]
+  onChange: (value: string | null) => void
+}) {
+  const currentValue = value || ALL_VALUE
+  const displayLabel = currentValue === ALL_VALUE
+    ? labels.table.allItems
+    : options.find((o) => o.value === currentValue)?.label ?? currentValue
+
+  return (
+    <Select
+      value={currentValue}
+      onValueChange={(val) => onChange(val === ALL_VALUE ? null : val)}
+    >
+      <SelectTrigger className="h-7 border-transparent bg-transparent text-xs hover:bg-muted/50 focus-visible:border-input focus-visible:ring-1 focus-visible:ring-ring/30 data-placeholder:text-muted-foreground/50">
+        <span className="flex flex-1 text-left truncate">{displayLabel}</span>
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value={ALL_VALUE}>
+          {labels.table.allItems}
+        </SelectItem>
+        {options.map((opt) => (
+          <SelectItem key={opt.value} value={opt.value}>
+            {opt.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  )
+}
+
 export function DataTable<TData, TValue>({
   columns,
   data,
@@ -107,7 +143,7 @@ export function DataTable<TData, TValue>({
                   return (
                     <TableHead
                       key={header.id}
-                      className="h-9 text-xs font-medium text-muted-foreground tracking-wide uppercase"
+                      className="h-9 text-xs font-medium text-muted-foreground"
                     >
                       {header.isPlaceholder ? null : canSort ? (
                         <button
@@ -154,29 +190,12 @@ export function DataTable<TData, TValue>({
                           className="h-7 rounded-md border-transparent bg-transparent text-xs placeholder:text-muted-foreground/50 hover:bg-muted/50 focus-visible:border-input focus-visible:bg-transparent focus-visible:ring-1 focus-visible:ring-ring/30"
                         />
                       ) : meta?.filterType === 'select' ? (
-                        <Select
-                          value={filterValue || ALL_VALUE}
-                          onValueChange={(val) =>
-                            onColumnFilterChange(
-                              columnId,
-                              val === ALL_VALUE ? null : val
-                            )
-                          }
-                        >
-                          <SelectTrigger className="h-7 border-transparent bg-transparent text-xs hover:bg-muted/50 focus-visible:border-input focus-visible:ring-1 focus-visible:ring-ring/30 data-placeholder:text-muted-foreground/50">
-                            <SelectValue placeholder={labels.table.allItems} />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value={ALL_VALUE}>
-                              {labels.table.allItems}
-                            </SelectItem>
-                            {(filterOptions[columnId] ?? []).map((opt) => (
-                              <SelectItem key={opt.value} value={opt.value}>
-                                {opt.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <SelectFilter
+                          value={filterValue}
+                          options={filterOptions[columnId] ?? []}
+                          onChange={(val) => onColumnFilterChange(columnId, val)}
+                        />
+
                       ) : null}
                     </TableHead>
                   )
