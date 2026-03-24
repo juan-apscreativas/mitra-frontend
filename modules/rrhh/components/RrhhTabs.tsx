@@ -17,7 +17,7 @@ const tabs: TabConfig[] = [
   { id: 'positions', label: labels.rrhh.tabs.positions, icon: Briefcase, disabled: false },
   { id: 'areas', label: labels.rrhh.tabs.areas, icon: Building2, disabled: false },
   { id: 'documentation', label: labels.rrhh.tabs.documentation, icon: FileText, disabled: false },
-  { id: 'reports', label: labels.rrhh.tabs.reports, icon: BarChart3, disabled: true },
+  { id: 'reports', label: labels.rrhh.tabs.reports, icon: BarChart3, disabled: false },
 ]
 
 interface RrhhTabsProps {

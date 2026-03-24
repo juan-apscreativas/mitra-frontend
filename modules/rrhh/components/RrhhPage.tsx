@@ -19,6 +19,7 @@ import { EmployeeList } from './EmployeeList'
 import { EmployeeFormDrawer } from './EmployeeFormDrawer'
 import { EmployeeDetailDrawer } from './EmployeeDetailDrawer'
 import { OrgChart } from './OrgChart'
+import { ReportsDashboard } from './ReportsDashboard'
 
 const tabPermissions: Record<string, string> = {
   employees: 'employees.create',
@@ -92,7 +93,7 @@ export function RrhhPage() {
         <p className="text-sm text-muted-foreground">{labels.rrhh.subtitle}</p>
       </div>
 
-      <RrhhStats />
+      <RrhhStats activeTab={activeTab} />
 
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="overflow-x-auto">
@@ -108,34 +109,40 @@ export function RrhhPage() {
         )}
       </div>
 
-      <div className="rounded-xl bg-background ring-1 ring-foreground/10 p-6">
-        {activeTab === 'org-chart' && (
-          <OrgChart
-            onViewEmployee={(id) => setEmployeeDetailDrawer({ open: true, employeeId: id })}
-          />
-        )}
-        {activeTab === 'employees' && (
-          <EmployeeList
-            onEdit={(id) => setEmployeeDrawer({ open: true, mode: 'edit', employeeId: id })}
-            onView={(id) => setEmployeeDetailDrawer({ open: true, employeeId: id })}
-          />
-        )}
-        {activeTab === 'areas' && (
-          <AreaList
-            onEdit={(id) => setAreaDrawer({ open: true, mode: 'edit', areaId: id })}
-          />
-        )}
-        {activeTab === 'positions' && (
-          <PositionList
-            onEdit={(id) => setPositionDrawer({ open: true, mode: 'edit', positionId: id })}
-          />
-        )}
-        {activeTab === 'documentation' && (
-          <DocumentList
-            onEdit={(id) => setDocumentDrawer({ open: true, mode: 'edit', documentId: id })}
-          />
-        )}
-      </div>
+      {activeTab === 'reports' ? (
+        <ReportsDashboard
+          onViewEmployee={(id) => setEmployeeDetailDrawer({ open: true, employeeId: id })}
+        />
+      ) : (
+        <div className="rounded-xl bg-background ring-1 ring-foreground/10 p-6">
+          {activeTab === 'org-chart' && (
+            <OrgChart
+              onViewEmployee={(id) => setEmployeeDetailDrawer({ open: true, employeeId: id })}
+            />
+          )}
+          {activeTab === 'employees' && (
+            <EmployeeList
+              onEdit={(id) => setEmployeeDrawer({ open: true, mode: 'edit', employeeId: id })}
+              onView={(id) => setEmployeeDetailDrawer({ open: true, employeeId: id })}
+            />
+          )}
+          {activeTab === 'areas' && (
+            <AreaList
+              onEdit={(id) => setAreaDrawer({ open: true, mode: 'edit', areaId: id })}
+            />
+          )}
+          {activeTab === 'positions' && (
+            <PositionList
+              onEdit={(id) => setPositionDrawer({ open: true, mode: 'edit', positionId: id })}
+            />
+          )}
+          {activeTab === 'documentation' && (
+            <DocumentList
+              onEdit={(id) => setDocumentDrawer({ open: true, mode: 'edit', documentId: id })}
+            />
+          )}
+        </div>
+      )}
 
       <EmployeeFormDrawer
         open={employeeDrawer.open}

@@ -1,11 +1,11 @@
 import { httpClient } from '@/lib/http-client'
-import type { RrhhStats } from '../types'
+import type { RrhhStats, RrhhTab } from '../types'
 
 export const rrhhStatsKeys = {
   all: ['rrhh', 'stats'] as const,
-  detail: () => [...rrhhStatsKeys.all, 'detail'] as const,
+  byTab: (tab: RrhhTab) => [...rrhhStatsKeys.all, tab] as const,
 }
 
-export async function getRrhhStats(): Promise<{ data: RrhhStats }> {
-  return httpClient.get('/rrhh/stats')
+export async function getRrhhStats(tab: RrhhTab): Promise<{ data: RrhhStats }> {
+  return httpClient.get('/rrhh/stats', { params: { tab } })
 }

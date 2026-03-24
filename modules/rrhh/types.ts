@@ -179,12 +179,74 @@ export interface EmployeeFormProps {
 }
 
 // Stats
+export interface RrhhStatsMetric {
+  key: string
+  label: string
+  value: number | string
+}
+
 export interface RrhhStats {
-  active_employees: number
-  blocked_employees: number
-  complete_docs: number
-  incomplete_docs: number
-  active_positions: number
+  metrics: RrhhStatsMetric[]
+}
+
+// Reports types
+export interface ReportsAreaDistribution {
+  area_name: string
+  employee_count: number
+}
+export interface ReportsPositionOccupancy {
+  position_name: string
+  area_name: string
+  occupied: number
+  authorized: number
+}
+export interface ReportsDocCompliance {
+  status: 'complete' | 'pending' | 'no_requirements'
+  count: number
+}
+export interface ReportsPendingDocument {
+  employee_id: string
+  employee_name: string
+  position_name: string
+  area_name: string
+  missing_count: number
+  avatar_url: string | null
+}
+export interface ReportsEmployeeSummary {
+  id: string
+  name: string
+  position_name: string
+  area_name: string
+  status: 'active' | 'blocked'
+  seniority_years: number
+  hired_at: string
+  doc_status: 'complete' | 'pending' | 'no_requirements'
+  required_docs_uploaded: number
+  required_docs_total: number
+  avatar_url: string | null
+}
+export interface ReportsData {
+  metrics: RrhhStatsMetric[]
+  charts: {
+    area_distribution: ReportsAreaDistribution[]
+    position_occupancy: ReportsPositionOccupancy[]
+    doc_compliance: ReportsDocCompliance[]
+  }
+  pending_documents: ReportsPendingDocument[]
+  employees: {
+    data: ReportsEmployeeSummary[]
+    meta: { current_page: number; last_page: number; per_page: number; total: number }
+  }
+}
+export interface ReportsFilterParams {
+  'filter[area_id]'?: string
+  'filter[employee_status]'?: string
+  'filter[doc_status]'?: string
+  'filter[seniority_min]'?: string
+  'filter[seniority_max]'?: string
+  page?: number
+  per_page?: number
+  sort?: string
 }
 
 // Tab type
