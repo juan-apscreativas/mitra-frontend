@@ -3,8 +3,6 @@ export interface Area {
   id: string
   name: string
   status: 'active' | 'inactive'
-  active_positions_count: number
-  used_positions: number
   created_at: string
   updated_at: string
 }

@@ -296,8 +296,6 @@ export const labels = {
       fields: {
         name: 'Nombre',
         status: 'Estado',
-        activePositions: 'Puestos activos',
-        usedPositions: 'Plazas ocupadas',
       },
     },
     positions: {

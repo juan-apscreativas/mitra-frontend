@@ -13,17 +13,6 @@ export const areaColumns: ColumnDef<Area>[] = [
     meta: { filterType: 'text' },
   },
   {
-    accessorKey: 'active_positions_count',
-    header: labels.rrhh.areas.fields.activePositions,
-    enableSorting: false,
-  },
-  {
-    id: 'used_positions',
-    header: labels.rrhh.areas.fields.usedPositions,
-    enableSorting: false,
-    cell: ({ row }) => row.original.used_positions,
-  },
-  {
     accessorKey: 'status',
     header: labels.rrhh.areas.fields.status,
     meta: { filterType: 'select' },
