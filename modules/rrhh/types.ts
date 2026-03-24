@@ -213,3 +213,20 @@ export interface DocumentFormProps {
   formId?: string
   onSuccess?: () => void
 }
+
+// Org Chart types
+export interface OrgChartEmployee {
+  id: number
+  name: string
+  status: 'active' | 'blocked'
+}
+
+export interface OrgChartNode {
+  id: number
+  name: string
+  area_id: number
+  area_name: string
+  reports_to_id: number | null
+  authorized_positions: number
+  employees: OrgChartEmployee[]
+}
