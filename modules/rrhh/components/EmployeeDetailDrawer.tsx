@@ -1,8 +1,7 @@
 'use client'
 
-import { useState, useRef } from 'react'
-import { Pencil, FileTextIcon, Camera, Trash2 } from 'lucide-react'
-import { toast } from 'sonner'
+import { useState } from 'react'
+import { Pencil, FileTextIcon } from 'lucide-react'
 import {
   FormDrawer,
   FormDrawerContent,
@@ -18,7 +17,7 @@ import { Button } from '@/components/ui/button'
 import { Authorized } from '@/components/ui/authorized'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { labels } from '@/lib/labels'
-import { useEmployee, useUploadEmployeeAvatar, useDeleteEmployeeAvatar } from '../hooks/use-employees'
+import { useEmployee } from '../hooks/use-employees'
 import { EmployeeFormDrawer } from './EmployeeFormDrawer'
 import { EmployeeDocumentUploadDrawer } from './EmployeeDocumentUploadDrawer'
 import type { Employee } from '../types'
@@ -50,10 +49,6 @@ export function EmployeeDetailDrawer({ open, onOpenChange, employeeId }: Employe
   const [editOpen, setEditOpen] = useState(false)
   const [docUploadOpen, setDocUploadOpen] = useState(false)
 
-  const uploadAvatar = useUploadEmployeeAvatar()
-  const deleteAvatar = useDeleteEmployeeAvatar()
-  const fileInputRef = useRef<HTMLInputElement>(null)
-
   const docs = employee?.documents ?? []
   const requiredDocs = docs.filter((d) => d.is_required)
   const optionalDocs = docs.filter((d) => !d.is_required)
@@ -66,25 +61,6 @@ export function EmployeeDetailDrawer({ open, onOpenChange, employeeId }: Employe
 
   return (
     <>
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/jpeg,image/png,image/webp"
-        className="hidden"
-        onChange={async (e) => {
-          const file = e.target.files?.[0]
-          if (!file || !employee) return
-          try {
-            await uploadAvatar.mutateAsync({ userId: employee.user_id, file })
-            toast.success(labels.users.avatar.uploaded)
-            refetch()
-          } catch (err: unknown) {
-            toast.error(err instanceof Error ? err.message : labels.users.avatar.uploadError)
-          }
-          if (fileInputRef.current) fileInputRef.current.value = ''
-        }}
-      />
-
       <FormDrawer open={open} onOpenChange={onOpenChange} key={employeeId}>
         <FormDrawerContent>
           <FormDrawerHeader>
@@ -218,34 +194,6 @@ export function EmployeeDetailDrawer({ open, onOpenChange, employeeId }: Employe
 
           <FormDrawerFooter className="justify-center gap-2">
             <Authorized permission="employees.update">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <Camera className="h-4 w-4" />
-                {employee?.avatar_url ? labels.users.avatar.replace : labels.users.avatar.upload}
-              </Button>
-              {employee?.avatar_url && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-destructive hover:text-destructive"
-                  onClick={async () => {
-                    if (!employee) return
-                    try {
-                      await deleteAvatar.mutateAsync(employee.user_id)
-                      toast.success(labels.users.avatar.deleted)
-                      refetch()
-                    } catch (err: unknown) {
-                      toast.error(err instanceof Error ? err.message : labels.users.avatar.deleteError)
-                    }
-                  }}
-                >
-                  <Trash2 className="h-4 w-4" />
-                  {labels.users.avatar.delete}
-                </Button>
-              )}
               <Button
                 variant="outline"
                 className="flex-1"
