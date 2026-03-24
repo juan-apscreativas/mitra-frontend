@@ -79,7 +79,7 @@ export function EmployeeFormDrawer({ open, onOpenChange, mode, employeeId }: Emp
             <>
               {/* Avatar section — only in edit mode (user exists) */}
               {isEdit && employee && (
-                <div className="flex flex-col items-center gap-2 px-6 pb-4">
+                <div className="flex flex-col items-center gap-2 px-6 pt-2 pb-4">
                   {/* Avatar with click-to-upload overlay */}
                   <div className="group relative">
                     <button
@@ -119,7 +119,7 @@ export function EmployeeFormDrawer({ open, onOpenChange, mode, employeeId }: Emp
                             toast.error(err instanceof Error ? err.message : labels.users.avatar.deleteError)
                           }
                         }}
-                        className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-destructive-foreground shadow-sm ring-2 ring-background transition-transform hover:scale-110"
+                        className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-muted text-muted-foreground ring-2 ring-background transition-all hover:bg-foreground/10 hover:text-foreground"
                         title={labels.users.avatar.delete}
                       >
                         <Trash2 className="h-2.5 w-2.5" />
