@@ -1,6 +1,5 @@
 'use client'
 
-import { toast } from 'sonner'
 import {
   FormDrawer,
   FormDrawerContent,
@@ -28,13 +27,7 @@ export function EmployeeFormDrawer({ open, onOpenChange, mode, employeeId }: Emp
     ? `${labels.common.edit}: ${employee?.name ?? ''}`
     : labels.rrhh.employees.create
 
-  function handleSuccess(password?: string) {
-    if (password) {
-      toast.success(
-        `${labels.rrhh.employees.docs.temporaryPasswordMessage} ${password}`,
-        { duration: 15000 }
-      )
-    }
+  function handleSuccess() {
     onOpenChange(false)
   }
 

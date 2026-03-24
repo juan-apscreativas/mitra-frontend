@@ -342,6 +342,8 @@ export const labels = {
       fields: {
         name: 'Nombre',
         email: 'Correo electrónico',
+        password: 'Contraseña',
+        passwordConfirmation: 'Confirmar contraseña',
         position: 'Puesto',
         area: 'Área',
         hiredAt: 'Fecha de ingreso',

@@ -145,6 +145,8 @@ export interface Employee {
 export interface CreateEmployeeInput {
   name: string
   email: string
+  password: string
+  password_confirmation: string
   position_id: string
   hired_at: string
   location?: string | null
@@ -172,7 +174,7 @@ export interface EmployeeFormProps {
   employeeId?: string
   mode: 'create' | 'edit'
   formId?: string
-  onSuccess?: (temporaryPassword?: string) => void
+  onSuccess?: () => void
 }
 
 // Stats

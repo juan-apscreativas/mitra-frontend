@@ -43,6 +43,7 @@ export function EmployeeForm({ defaultValues, employeeId, mode, formId = 'employ
     defaultValues: defaultValues ?? {
       name: '',
       email: '',
+      ...(!isEdit ? { password: '', password_confirmation: '' } : {}),
       position_id: '',
       hired_at: '',
       location: '',
@@ -66,10 +67,10 @@ export function EmployeeForm({ defaultValues, employeeId, mode, formId = 'employ
         await queryClient.invalidateQueries({ queryKey: rrhhStatsKeys.all })
         onSuccess?.()
       } else {
-        const result = await createEmployee.mutateAsync(values as CreateEmployeeFormValues)
+        await createEmployee.mutateAsync(values as CreateEmployeeFormValues)
         toast.success(labels.rrhh.employees.created)
         await queryClient.invalidateQueries({ queryKey: rrhhStatsKeys.all })
-        onSuccess?.(result.temporary_password)
+        onSuccess?.()
       }
     } catch (error) {
       mapApiErrors(error, form.setError)
@@ -94,19 +95,47 @@ export function EmployeeForm({ defaultValues, employeeId, mode, formId = 'employ
             )}
           />
           {!isEdit && (
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{labels.rrhh.employees.fields.email}</FormLabel>
-                  <FormControl>
-                    <Input type="email" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <>
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{labels.rrhh.employees.fields.email}</FormLabel>
+                    <FormControl>
+                      <Input type="email" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={'password' as never}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{labels.rrhh.employees.fields.password}</FormLabel>
+                    <FormControl>
+                      <Input type="password" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={'password_confirmation' as never}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{labels.rrhh.employees.fields.passwordConfirmation}</FormLabel>
+                    <FormControl>
+                      <Input type="password" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </>
           )}
           <FormField
             control={form.control}

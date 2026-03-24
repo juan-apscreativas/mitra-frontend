@@ -62,9 +62,14 @@ export type UpdatePositionFormValues = z.infer<typeof updatePositionSchema>
 export const createEmployeeSchema = z.object({
   name: z.string().min(1, 'El nombre es requerido').max(255),
   email: z.string().min(1, 'El correo es requerido').email('Correo inválido').max(255),
+  password: z.string().min(8, 'Mínimo 8 caracteres'),
+  password_confirmation: z.string().min(8),
   position_id: z.string().min(1, 'El puesto es requerido'),
   hired_at: z.string().min(1, 'La fecha de ingreso es requerida'),
   location: z.string().max(255).optional().nullable(),
+}).refine((data) => data.password === data.password_confirmation, {
+  message: 'Las contraseñas no coinciden',
+  path: ['password_confirmation'],
 })
 
 export const updateEmployeeSchema = z.object({
