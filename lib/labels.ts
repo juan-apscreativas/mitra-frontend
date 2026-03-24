@@ -170,6 +170,7 @@ export const labels = {
       dateFrom: 'Desde',
       dateTo: 'Hasta',
     },
+    manageRoles: 'Administrar Roles',
     sections: {
       info: 'Información',
       roles: 'Roles',
