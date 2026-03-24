@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Authorized } from '@/components/ui/authorized'
@@ -32,8 +33,21 @@ const tabCreateLabels: Record<string, string> = {
   documentation: labels.rrhh.documents.create,
 }
 
+const VALID_TABS: RrhhTab[] = ['org-chart', 'employees', 'positions', 'areas', 'documentation', 'reports']
+const DEFAULT_TAB: RrhhTab = 'employees'
+
 export function RrhhPage() {
-  const [activeTab, setActiveTab] = useState<RrhhTab>('employees')
+  const searchParams = useSearchParams()
+  const router = useRouter()
+
+  const tabParam = searchParams.get('tab') as RrhhTab | null
+  const activeTab: RrhhTab = tabParam && VALID_TABS.includes(tabParam) ? tabParam : DEFAULT_TAB
+
+  const setActiveTab = useCallback((tab: RrhhTab) => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('tab', tab)
+    router.push(`?${params.toString()}`, { scroll: false })
+  }, [searchParams, router])
 
   const [employeeDrawer, setEmployeeDrawer] = useState<{ open: boolean; mode: 'create' | 'edit'; employeeId?: string }>({
     open: false,
