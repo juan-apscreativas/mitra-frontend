@@ -1,5 +1,6 @@
 'use client'
 
+import { Input } from '@/components/ui/input'
 import { labels } from '@/lib/labels'
 import type { Area } from '../types'
 
@@ -109,24 +110,26 @@ export function ReportsFilters({
       {/* Seniority min */}
       <div className="flex flex-col gap-1">
         <label className="text-xs font-medium text-muted-foreground">{l.seniorityMin}</label>
-        <input
+        <Input
           type="number"
           min={0}
+          placeholder="0"
+          className="w-28"
           value={seniorityMin}
           onChange={(e) => onSeniorityMinChange(e.target.value)}
-          className="w-28 rounded-lg border border-input bg-background px-3 py-1.5 text-sm text-foreground ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
         />
       </div>
 
       {/* Seniority max */}
       <div className="flex flex-col gap-1">
         <label className="text-xs font-medium text-muted-foreground">{l.seniorityMax}</label>
-        <input
+        <Input
           type="number"
           min={0}
+          placeholder="∞"
+          className="w-28"
           value={seniorityMax}
           onChange={(e) => onSeniorityMaxChange(e.target.value)}
-          className="w-28 rounded-lg border border-input bg-background px-3 py-1.5 text-sm text-foreground ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
         />
       </div>
     </div>
