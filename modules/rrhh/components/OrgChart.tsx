@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
-import { ZoomIn, ZoomOut, Maximize2, Minimize2 } from 'lucide-react'
+import { ZoomIn, ZoomOut, Maximize2, Minimize2, RefreshCw } from 'lucide-react'
 import { labels } from '@/lib/labels'
 import { LoadingState, EmptyState, ErrorState } from '@/components/ui/states'
 import { useOrgChart } from '../hooks/use-org-chart'
@@ -131,8 +131,17 @@ export function OrgChart({ onViewEmployee }: OrgChartProps) {
           onEmployeeStatusChange={setEmployeeStatus}
         />
 
-        {/* Zoom controls */}
+        {/* Toolbar */}
         <div className="ml-auto flex items-center gap-1 rounded-lg bg-muted p-0.5">
+          <button
+            type="button"
+            onClick={() => refetch()}
+            className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-background hover:text-foreground"
+            title={labels.common.refresh}
+          >
+            <RefreshCw className="h-3.5 w-3.5" />
+          </button>
+          <div className="mx-0.5 h-4 w-px bg-foreground/10" />
           <button
             type="button"
             onClick={handleZoomOut}

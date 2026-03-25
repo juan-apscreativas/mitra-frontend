@@ -22,6 +22,7 @@ export const labels = {
     confirm: 'Confirmar',
     back: 'Volver',
     filters: 'Filtros',
+    refresh: 'Actualizar',
     appName: 'Skeleton',
     selected: 'Seleccionado',
     drawer: {
