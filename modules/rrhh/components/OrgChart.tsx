@@ -60,26 +60,21 @@ export function OrgChart({ onViewEmployee }: OrgChartProps) {
     setPan({ x: 0, y: 0 })
   }, [])
 
-  // Fullscreen
-  const fullscreenRef = useRef<HTMLDivElement>(null)
+  // Fullscreen (CSS-based to keep drawer portals working)
   const [isFullscreen, setIsFullscreen] = useState(false)
 
   const toggleFullscreen = useCallback(() => {
-    if (!fullscreenRef.current) return
-    if (!document.fullscreenElement) {
-      fullscreenRef.current.requestFullscreen()
-    } else {
-      document.exitFullscreen()
-    }
+    setIsFullscreen((prev) => !prev)
   }, [])
 
   useEffect(() => {
-    function onFsChange() {
-      setIsFullscreen(!!document.fullscreenElement)
+    if (!isFullscreen) return
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') setIsFullscreen(false)
     }
-    document.addEventListener('fullscreenchange', onFsChange)
-    return () => document.removeEventListener('fullscreenchange', onFsChange)
-  }, [])
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [isFullscreen])
 
   // Mouse wheel zoom
   useEffect(() => {
@@ -126,7 +121,7 @@ export function OrgChart({ onViewEmployee }: OrgChartProps) {
   const zoomPercent = Math.round(zoom * 100)
 
   return (
-    <div ref={fullscreenRef} className={`space-y-4 ${isFullscreen ? 'bg-background p-4' : ''}`}>
+    <div className={isFullscreen ? 'fixed inset-0 z-50 space-y-4 overflow-auto bg-background p-4' : 'space-y-4'}>
       <div className="flex flex-wrap items-center gap-3">
         <OrgChartFilters
           areas={areas}
