@@ -204,10 +204,10 @@ export function UserDetail({ id }: UserDetailProps) {
                   className="flex items-center gap-3 rounded-md px-2 py-2 hover:bg-muted/50 transition-colors"
                 >
                   <Checkbox
-                    checked={selectedScopeIds.includes(rule.id)}
+                    checked={selectedScopeIds.includes(String(rule.id))}
                     onCheckedChange={(checked) =>
                       setSelectedScopeIds((prev) =>
-                        checked ? [...prev, rule.id] : prev.filter((s) => s !== rule.id)
+                        checked ? [...prev, String(rule.id)] : prev.filter((s) => s !== String(rule.id))
                       )
                     }
                     disabled={syncDataScopes.isPending}
