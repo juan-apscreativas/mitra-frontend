@@ -5,7 +5,6 @@ import { passwordSchema } from '@/lib/validations'
 export const loginSchema = z.object({
   email: z.string().min(1, labels.auth.email).email(),
   password: z.string().min(1, labels.auth.password),
-  remember: z.boolean(),
 })
 
 export type LoginFormValues = z.infer<typeof loginSchema>

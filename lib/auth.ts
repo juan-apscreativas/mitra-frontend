@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
 import { httpClient } from '@/lib/http-client'
+import { tokenStorage } from '@/lib/token-storage'
 
 export interface User {
   id: string
@@ -21,6 +22,7 @@ export function useUser() {
     queryKey: userKeys.current,
     queryFn: () => httpClient.get<{ data: User }>('/user').then((res) => res.data),
     retry: false,
+    enabled: !!tokenStorage.get(),
   })
 }
 
@@ -29,7 +31,8 @@ export function useLogout() {
 
   return useMutation({
     mutationFn: () => httpClient.post('/logout'),
-    onSuccess: () => {
+    onSettled: () => {
+      tokenStorage.clear()
       queryClient.clear()
       window.location.href = '/login'
     },

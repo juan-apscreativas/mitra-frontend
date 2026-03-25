@@ -1,7 +1,15 @@
 export interface LoginInput {
   email: string
   password: string
-  remember?: boolean
+}
+
+export interface LoginResponse {
+  data: {
+    id: string
+    name: string
+    email: string
+    token: string
+  }
 }
 
 export interface ForgotPasswordInput {

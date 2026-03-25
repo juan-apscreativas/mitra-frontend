@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation'
 import { Mail, Lock, Eye, EyeOff, LogIn } from 'lucide-react'
 import { routes } from '@/config/routes'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
   InputGroup,
   InputGroupAddon,
@@ -34,7 +33,7 @@ export function LoginForm() {
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: '', password: '', remember: false },
+    defaultValues: { email: '', password: '' },
   })
 
   async function onSubmit(values: LoginFormValues) {
@@ -123,26 +122,6 @@ export function LoginForm() {
                 </InputGroup>
               </FormControl>
               <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Remember checkbox */}
-        <FormField
-          control={form.control}
-          name="remember"
-          render={({ field }) => (
-            <FormItem className="flex items-center gap-3 space-y-0 px-1">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  className="size-5"
-                />
-              </FormControl>
-              <FormLabel className="!mt-0 text-sm font-medium text-muted-foreground">
-                {labels.auth.rememberMe}
-              </FormLabel>
             </FormItem>
           )}
         />

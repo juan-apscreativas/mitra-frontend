@@ -1,13 +1,14 @@
 import { httpClient } from '@/lib/http-client'
 import type {
   LoginInput,
+  LoginResponse,
   ForgotPasswordInput,
   ResetPasswordInput,
   ChangePasswordInput,
 } from './types'
 
-export async function login(data: LoginInput) {
-  return httpClient.post('/login', data)
+export async function login(data: LoginInput): Promise<LoginResponse> {
+  return httpClient.post<LoginResponse>('/login', data)
 }
 
 export async function forgotPassword(data: ForgotPasswordInput) {

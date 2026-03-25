@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { userKeys } from '@/lib/auth'
+import { tokenStorage } from '@/lib/token-storage'
 import { login, forgotPassword, resetPassword, changePassword } from './api'
 
 export function useLogin() {
@@ -7,7 +8,8 @@ export function useLogin() {
 
   return useMutation({
     mutationFn: login,
-    onSuccess: () => {
+    onSuccess: (response) => {
+      tokenStorage.set(response.data.token)
       queryClient.invalidateQueries({ queryKey: userKeys.current })
     },
   })
