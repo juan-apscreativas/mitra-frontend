@@ -12,6 +12,13 @@ export function mapApiErrors<T extends FieldValues>(
     return
   }
 
+  // 422 with business error code → toast with the business message
+  if (error.status === 422 && error.code) {
+    toast.error(error.message || labels.common.error)
+    return
+  }
+
+  // 422 with field validation errors → set errors on form fields
   if (error.status === 422 && error.errors) {
     for (const [field, messages] of Object.entries(error.errors)) {
       setError(field as Path<T>, { message: messages[0] })

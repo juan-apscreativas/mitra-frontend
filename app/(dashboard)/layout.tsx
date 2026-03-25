@@ -9,7 +9,7 @@ import { AppSidebar } from '@/components/app-sidebar'
 import { Separator } from '@/components/ui/separator'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Search, Bell, LogOut } from 'lucide-react'
 import { labels } from '@/lib/labels'
 import { routes } from '@/config/routes'
@@ -65,6 +65,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <Bell className="h-4 w-4" />
             </Button>
             <Avatar>
+              {user?.avatar_url && <AvatarImage src={user.avatar_url} alt={user?.name ?? ''} />}
               <AvatarFallback className="bg-primary text-primary-foreground text-xs">
                 {initials}
               </AvatarFallback>

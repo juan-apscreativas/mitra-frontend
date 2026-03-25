@@ -51,6 +51,29 @@ export const columns: ColumnDef<User>[] = [
     },
   },
   {
+    accessorKey: 'status',
+    header: labels.users.fields.status,
+    meta: { filterType: 'select' },
+    cell: ({ row }) => {
+      const status = row.original.status
+      if (status === 'active') {
+        return (
+          <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 border">
+            {labels.users.statuses.active}
+          </Badge>
+        )
+      }
+      if (status === 'blocked') {
+        return <Badge variant="destructive">{labels.users.statuses.blocked}</Badge>
+      }
+      return (
+        <Badge className="bg-destructive/10 text-destructive">
+          {labels.users.statuses.inactive}
+        </Badge>
+      )
+    },
+  },
+  {
     accessorKey: 'last_login_at',
     header: labels.users.lastLogin,
     cell: ({ row }) => {
@@ -61,13 +84,21 @@ export const columns: ColumnDef<User>[] = [
   {
     id: 'actions',
     enableSorting: false,
-    cell: ({ row }) => (
-      <ActionsDropdown
-        viewHref={`/users/${row.original.id}`}
-        editHref={`/users/${row.original.id}/edit`}
-        viewPermission="users.view"
-        editPermission="users.update"
-      />
-    ),
+    cell: ({ row, table }) => {
+      const meta = table.options.meta as {
+        onView?: (id: string) => void
+        onEdit?: (id: string) => void
+      } | undefined
+      return (
+        <ActionsDropdown
+          onView={() => meta?.onView?.(row.original.id)}
+          onEdit={() => meta?.onEdit?.(row.original.id)}
+          detailHref={`/users/${row.original.id}`}
+          viewPermission="users.view"
+          editPermission="users.update"
+          detailPermission="users.view"
+        />
+      )
+    },
   },
 ]

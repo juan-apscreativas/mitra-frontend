@@ -5,12 +5,14 @@ import { env } from '@/config/env'
 export class ApiError extends Error {
   status: number
   errors?: Record<string, string[]>
+  code?: string
 
-  constructor(status: number, message: string, errors?: Record<string, string[]>) {
+  constructor(status: number, message: string, errors?: Record<string, string[]>, code?: string) {
     super(message)
     this.name = 'ApiError'
     this.status = status
     this.errors = errors
+    this.code = code
   }
 }
 
@@ -119,8 +121,9 @@ async function request<T>(
     const body = await response.json().catch(() => ({}))
     throw new ApiError(
       response.status,
-      body.message ?? `Request failed with status ${response.status}`,
-      body.errors
+      body.message ?? body.error?.message ?? `Request failed with status ${response.status}`,
+      body.errors,
+      body.error?.code
     )
   }
 

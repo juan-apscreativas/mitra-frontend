@@ -8,7 +8,12 @@ import { useRoles } from '../hooks'
 import { columns } from './columns'
 import type { RoleListParams } from '../types'
 
-export function RoleList() {
+interface RoleListProps {
+  onView?: (id: string) => void
+  onEdit?: (id: string) => void
+}
+
+export function RoleList({ onView, onEdit }: RoleListProps) {
   const {
     sorting,
     columnFilters,
@@ -42,6 +47,7 @@ export function RoleList() {
           onColumnFilterChange={onColumnFilterChange}
           onPageChange={onPageChange}
           onPerPageChange={onPerPageChange}
+          meta={{ onView, onEdit }}
         />
       )}
     </div>

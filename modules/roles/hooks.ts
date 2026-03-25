@@ -20,8 +20,8 @@ export function useRoles(params?: RoleListParams) {
   return useQuery({ queryKey: roleKeys.list(params), queryFn: () => getRoles(params) })
 }
 
-export function useRole(id: string) {
-  return useQuery({ queryKey: roleKeys.detail(id), queryFn: () => getRole(id) })
+export function useRole(id: string, options?: { enabled?: boolean }) {
+  return useQuery({ queryKey: roleKeys.detail(id), queryFn: () => getRole(id), enabled: options?.enabled ?? true })
 }
 
 export function useCreateRole() {

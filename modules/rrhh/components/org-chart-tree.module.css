@@ -1,0 +1,57 @@
+.children {
+  position: relative;
+}
+
+/* Vertical connector: parent → horizontal bar */
+.children::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 20px;
+  background: var(--color-border);
+}
+
+/* Each child li */
+.childNode {
+  position: relative;
+  padding: 20px 12px 0;
+}
+
+/* Horizontal bar spanning siblings */
+.childNode::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--color-border);
+}
+
+/* First child: horizontal line from center → right */
+.childNode:first-child::before {
+  left: 50%;
+}
+
+/* Last child: horizontal line from left → center */
+.childNode:last-child::before {
+  right: 50%;
+}
+
+/* Single child: no horizontal bar needed */
+.childNode:only-child::before {
+  display: none;
+}
+
+/* Vertical drop from horizontal bar → child node */
+.childNode::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 20px;
+  background: var(--color-border);
+}

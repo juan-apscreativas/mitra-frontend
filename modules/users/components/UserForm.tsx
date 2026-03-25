@@ -2,9 +2,7 @@
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
   Form,
@@ -21,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { FormDrawerBody, FormDrawerSubmitFooter } from '@/components/ui/form-drawer'
 import { mapApiErrors } from '@/lib/forms'
 import { labels } from '@/lib/labels'
 import { useCreateUser, useUpdateUser } from '../hooks'
@@ -32,8 +31,7 @@ import {
 } from '../schemas'
 import type { UserFormProps } from '../types'
 
-export function UserForm({ defaultValues, userId, mode }: UserFormProps) {
-  const router = useRouter()
+export function UserForm({ defaultValues, userId, mode, formId = 'user-form', onSuccess }: UserFormProps) {
   const createUser = useCreateUser()
   const updateUser = useUpdateUser()
 
@@ -58,119 +56,112 @@ export function UserForm({ defaultValues, userId, mode }: UserFormProps) {
         await createUser.mutateAsync(values as CreateUserFormValues)
         toast.success(labels.users.created)
       }
-      router.push('/users')
+      onSuccess?.()
     } catch (error) {
       mapApiErrors(error, form.setError)
     }
   }
 
-  const isPending = createUser.isPending || updateUser.isPending
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 max-w-lg">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{labels.users.fields.name}</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{labels.users.fields.email}</FormLabel>
-              <FormControl>
-                <Input type="email" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name={'phone' as never}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{labels.users.fields.phone}</FormLabel>
-              <FormControl>
-                <Input {...field} value={(field.value as string) ?? ''} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {!isEdit && (
-          <>
-            <FormField
-              control={form.control}
-              name={'password' as never}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{labels.users.fields.password}</FormLabel>
-                  <FormControl>
-                    <Input type="password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name={'password_confirmation' as never}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{labels.users.fields.passwordConfirmation}</FormLabel>
-                  <FormControl>
-                    <Input type="password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </>
-        )}
-        {isEdit && (
+      <FormDrawerBody>
+        <form id={formId} onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
             control={form.control}
-            name={'status' as never}
+            name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{labels.users.fields.status}</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value as string}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="active">{labels.users.statuses.active}</SelectItem>
-                    <SelectItem value="inactive">{labels.users.statuses.inactive}</SelectItem>
-                    <SelectItem value="blocked">{labels.users.statuses.blocked}</SelectItem>
-                  </SelectContent>
-                </Select>
+                <FormLabel>{labels.users.fields.name}</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-        )}
-        <div className="flex gap-2">
-          <Button type="submit" disabled={isPending}>
-            {isPending ? labels.common.loading : labels.common.save}
-          </Button>
-          <Button type="button" variant="outline" onClick={() => router.back()}>
-            {labels.common.cancel}
-          </Button>
-        </div>
-      </form>
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{labels.users.fields.email}</FormLabel>
+                <FormControl>
+                  <Input type="email" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name={'phone' as never}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{labels.users.fields.phone}</FormLabel>
+                <FormControl>
+                  <Input {...field} value={(field.value as string) ?? ''} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {!isEdit && (
+            <>
+              <FormField
+                control={form.control}
+                name={'password' as never}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{labels.users.fields.password}</FormLabel>
+                    <FormControl>
+                      <Input type="password" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={'password_confirmation' as never}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{labels.users.fields.passwordConfirmation}</FormLabel>
+                    <FormControl>
+                      <Input type="password" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </>
+          )}
+          {isEdit && (
+            <FormField
+              control={form.control}
+              name={'status' as never}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{labels.users.fields.status}</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value as string}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="active">{labels.users.statuses.active}</SelectItem>
+                      <SelectItem value="inactive">{labels.users.statuses.inactive}</SelectItem>
+                      <SelectItem value="blocked">{labels.users.statuses.blocked}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+        </form>
+      </FormDrawerBody>
+      <FormDrawerSubmitFooter formId={formId} />
     </Form>
   )
 }

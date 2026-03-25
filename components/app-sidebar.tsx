@@ -19,6 +19,7 @@ import {
   Shield,
   SlidersHorizontal,
   LogOut,
+  Briefcase,
 } from 'lucide-react'
 import {
   Sidebar,
@@ -33,6 +34,7 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
 } from '@/components/ui/sidebar'
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { useUser, useLogout } from '@/lib/auth'
 import { labels } from '@/lib/labels'
 
@@ -53,6 +55,20 @@ const navGroups: NavGroup[] = [
     label: labels.nav.general,
     items: [
       { href: '/', label: labels.nav.dashboard, icon: LayoutDashboard },
+    ],
+  },
+  {
+    label: labels.nav.humanResources,
+    items: [
+      { href: '/recursos-humanos', label: labels.nav.rrhh, icon: Briefcase, permission: 'areas.view' },
+    ],
+  },
+  {
+    label: labels.nav.administration,
+    items: [
+      { href: '/users', label: labels.nav.users, icon: Users, permission: 'users.view' },
+      { href: '/roles', label: labels.nav.roles, icon: Shield, permission: 'roles.view' },
+      { href: '/data-scopes', label: labels.nav.dataScopes, icon: SlidersHorizontal, permission: 'data_scopes.view' },
     ],
   },
   {
@@ -79,14 +95,6 @@ const navGroups: NavGroup[] = [
       { href: '/contpaqi', label: labels.nav.contpaqi, icon: Calculator },
       { href: '/cxc', label: labels.nav.accountsReceivable, icon: ArrowUpRight },
       { href: '/cxp', label: labels.nav.accountsPayable, icon: ArrowDownLeft },
-    ],
-  },
-  {
-    label: labels.nav.administration,
-    items: [
-      { href: '/users', label: labels.nav.users, icon: Users, permission: 'users.view' },
-      { href: '/roles', label: labels.nav.roles, icon: Shield, permission: 'roles.view' },
-      { href: '/data-scopes', label: labels.nav.dataScopes, icon: SlidersHorizontal, permission: 'data_scopes.view' },
     ],
   },
 ]
@@ -160,9 +168,17 @@ export function AppSidebar() {
       <SidebarFooter className="p-4">
         <SidebarSeparator />
         <div className="flex items-center justify-between pt-2">
-          <div className="truncate">
-            <p className="text-sm font-medium truncate">{user?.name}</p>
-            <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+          <div className="flex items-center gap-2 truncate">
+            <Avatar size="sm">
+              {user?.avatar_url && <AvatarImage src={user.avatar_url} alt={user?.name ?? ''} />}
+              <AvatarFallback className="bg-primary text-primary-foreground text-[10px]">
+                {user?.name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase() ?? ''}
+              </AvatarFallback>
+            </Avatar>
+            <div className="truncate">
+              <p className="text-sm font-medium truncate">{user?.name}</p>
+              <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+            </div>
           </div>
           <button
             onClick={() => logout.mutate()}

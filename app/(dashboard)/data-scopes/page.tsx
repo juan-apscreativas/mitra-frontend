@@ -1,15 +1,19 @@
 'use client'
 
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { ArrowLeft, Plus } from 'lucide-react'
 import { DataScopeRuleList } from '@/modules/data-scopes/components/DataScopeRuleList'
+import { DataScopeRuleBuilderDrawer } from '@/modules/data-scopes/components/DataScopeRuleBuilderDrawer'
+import { DataScopeRuleViewDrawer } from '@/modules/data-scopes/components/DataScopeRuleViewDrawer'
 import { Button } from '@/components/ui/button'
 import { Authorized } from '@/components/ui/authorized'
 import { labels } from '@/lib/labels'
 
 export default function DataScopesPage() {
   const router = useRouter()
+  const [drawer, setDrawer] = useState<{ open: boolean; mode: 'create' | 'edit'; ruleId?: string }>({ open: false, mode: 'create' })
+  const [viewDrawer, setViewDrawer] = useState<{ open: boolean; ruleId: string }>({ open: false, ruleId: '' })
 
   return (
     <div className="space-y-6 p-6">
@@ -25,13 +29,27 @@ export default function DataScopesPage() {
           <h1 className="text-2xl font-bold">{labels.dataScopes.title}</h1>
         </div>
         <Authorized permission="data_scopes.create">
-          <Button nativeButton={false} render={<Link href="/data-scopes/new" />}>
+          <Button onClick={() => setDrawer({ open: true, mode: 'create' })}>
             <Plus className="h-4 w-4" />
             {labels.dataScopes.invite}
           </Button>
         </Authorized>
       </div>
-      <DataScopeRuleList />
+      <DataScopeRuleList
+        onView={(id) => setViewDrawer({ open: true, ruleId: id })}
+        onEdit={(id) => setDrawer({ open: true, mode: 'edit', ruleId: id })}
+      />
+      <DataScopeRuleViewDrawer
+        open={viewDrawer.open}
+        onOpenChange={(open) => setViewDrawer((prev) => ({ ...prev, open }))}
+        ruleId={viewDrawer.ruleId}
+      />
+      <DataScopeRuleBuilderDrawer
+        open={drawer.open}
+        onOpenChange={(open) => setDrawer((prev) => ({ ...prev, open }))}
+        mode={drawer.mode}
+        ruleId={drawer.ruleId}
+      />
     </div>
   )
 }

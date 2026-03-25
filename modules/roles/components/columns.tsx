@@ -37,6 +37,18 @@ export const columns: ColumnDef<Role>[] = [
   {
     id: 'actions',
     enableSorting: false,
-    cell: ({ row }) => <RoleActions role={row.original} />,
+    cell: ({ row, table }) => {
+      const meta = table.options.meta as {
+        onView?: (id: string) => void
+        onEdit?: (id: string) => void
+      } | undefined
+      return (
+        <RoleActions
+          role={row.original}
+          onView={() => meta?.onView?.(row.original.id)}
+          onEdit={() => meta?.onEdit?.(row.original.id)}
+        />
+      )
+    },
   },
 ]

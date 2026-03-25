@@ -47,4 +47,6 @@ export interface UserFormProps {
   defaultValues?: Partial<UpdateUserInput>
   userId?: string
   mode: 'create' | 'edit'
+  formId?: string
+  onSuccess?: () => void
 }

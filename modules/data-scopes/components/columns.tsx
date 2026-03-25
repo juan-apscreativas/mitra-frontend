@@ -37,11 +37,16 @@ export const columns: ColumnDef<DataScopeRule>[] = [
   {
     id: 'actions',
     enableSorting: false,
-    cell: ({ row }) => (
-      <ActionsDropdown
-        editHref={`/data-scopes/${row.original.id}/edit`}
-        editPermission="data_scopes.update"
-      />
-    ),
+    cell: ({ row, table }) => {
+      const meta = table.options.meta as { onView?: (id: string) => void; onEdit?: (id: string) => void } | undefined
+      return (
+        <ActionsDropdown
+          onView={() => meta?.onView?.(row.original.id)}
+          onEdit={() => meta?.onEdit?.(row.original.id)}
+          viewPermission="data_scopes.view"
+          editPermission="data_scopes.update"
+        />
+      )
+    },
   },
 ]

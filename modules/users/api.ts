@@ -39,6 +39,10 @@ export async function uploadAvatar(userId: string, file: File): Promise<{ data: 
   return httpClient.post(`/users/${userId}/avatar`, formData)
 }
 
+export async function deleteAvatar(userId: string): Promise<{ data: User }> {
+  return httpClient.delete(`/users/${userId}/avatar`)
+}
+
 export async function syncUserRoles(userId: string, roles: number[]): Promise<void> {
   return httpClient.put(`/users/${userId}/roles`, { roles })
 }

@@ -30,11 +30,11 @@ export function useDataScopeRules(params?: DataScopeRuleListParams) {
   })
 }
 
-export function useDataScopeRule(id: string) {
+export function useDataScopeRule(id: string, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: dataScopeRuleKeys.detail(id),
     queryFn: () => getDataScopeRule(id),
-    enabled: !!id,
+    enabled: !!id && (options?.enabled ?? true),
   })
 }
 

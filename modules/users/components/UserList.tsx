@@ -10,9 +10,11 @@ import type { UserListParams } from '../types'
 
 interface UserListProps {
   roleOptions?: { label: string; value: string }[]
+  onView?: (id: string) => void
+  onEdit?: (id: string) => void
 }
 
-export function UserList({ roleOptions = [] }: UserListProps) {
+export function UserList({ roleOptions = [], onView, onEdit }: UserListProps) {
   const {
     sorting,
     columnFilters,
@@ -29,6 +31,11 @@ export function UserList({ roleOptions = [] }: UserListProps) {
 
   const filterOptions: Record<string, { label: string; value: string }[]> = {
     role: roleOptions,
+    status: [
+      { label: labels.users.statuses.active, value: 'active' },
+      { label: labels.users.statuses.inactive, value: 'inactive' },
+      { label: labels.users.statuses.blocked, value: 'blocked' },
+    ],
   }
 
   if (error) return <ErrorState error={error} onRetry={refetch} />
@@ -51,6 +58,7 @@ export function UserList({ roleOptions = [] }: UserListProps) {
           filterOptions={filterOptions}
           onPageChange={onPageChange}
           onPerPageChange={onPerPageChange}
+          meta={{ onView, onEdit }}
         />
       )}
     </div>
