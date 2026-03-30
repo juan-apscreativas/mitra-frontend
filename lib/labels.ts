@@ -53,6 +53,25 @@ export const labels = {
     security: 'Seguridad',
     humanResources: 'Recursos Humanos',
     rrhh: 'RRHH',
+    catalogs: 'Catálogos',
+  },
+  catalogsPage: {
+    title: 'Catálogos Maestros',
+    subtitle: 'Administración de entidades base del sistema',
+    cards: {
+      users: {
+        title: 'Usuarios y RBAC',
+        description: 'Control de acceso y gestión de cuentas por rol',
+      },
+      roles: {
+        title: 'Roles y Permisos',
+        description: 'Administración de roles y acceso a módulos',
+      },
+      dataScopes: {
+        title: 'Alcance de Datos',
+        description: 'Reglas de visibilidad de registros por usuario y rol',
+      },
+    },
   },
   dashboard: {
     title: 'Dashboard',
