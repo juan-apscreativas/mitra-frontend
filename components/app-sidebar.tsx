@@ -15,11 +15,9 @@ import {
   Calculator,
   ArrowUpRight,
   ArrowDownLeft,
-  Users,
-  Shield,
-  SlidersHorizontal,
   LogOut,
   Briefcase,
+  LayoutGrid,
 } from 'lucide-react'
 import {
   Sidebar,
@@ -60,15 +58,13 @@ const navGroups: NavGroup[] = [
   {
     label: labels.nav.humanResources,
     items: [
-      { href: '/recursos-humanos', label: labels.nav.rrhh, icon: Briefcase, permission: 'areas.view' },
+      { href: '/recursos-humanos', label: labels.nav.humanResources, icon: Briefcase, permission: 'areas.view' },
     ],
   },
   {
     label: labels.nav.administration,
     items: [
-      { href: '/users', label: labels.nav.users, icon: Users, permission: 'users.view' },
-      { href: '/roles', label: labels.nav.roles, icon: Shield, permission: 'roles.view' },
-      { href: '/data-scopes', label: labels.nav.dataScopes, icon: SlidersHorizontal, permission: 'data_scopes.view' },
+      { href: '/catalogos', label: labels.nav.catalogs, icon: LayoutGrid, permission: 'users.view' },
     ],
   },
   {
